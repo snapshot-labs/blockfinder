@@ -1,3 +1,4 @@
+export default `
 type Query {
   blocks(where: Where): [Block]
 }
@@ -12,3 +13,4 @@ type Block {
   network: String
   number: Int
 }
+`;
