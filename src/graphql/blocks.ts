@@ -73,7 +73,7 @@ export default async function query(_parent, args) {
   if (!Array.isArray(networks)) networks = [networks];
 
   // Check cache
-  console.log('Check cache');
+  console.log('Check cache', ts, networks);
   const cache: any = await redis.hGetAll(`blocks:${ts}`);
 
   const p: any[] = [];
