@@ -12,10 +12,14 @@ let client;
   await client.connect();
   setInterval(async () => {
     const ts = (Date.now() / 1e3).toFixed();
-    await client.set('heartbeat', ts);
-    const heartbeat = await client.get('heartbeat');
-    console.log('Heartbeat', heartbeat);
-  }, 20e3);
+    try {
+      await client.set('heartbeat', ts);
+      const heartbeat = await client.get('heartbeat');
+      console.log('Heartbeat', heartbeat);
+    } catch (e) {
+      console.log('Heartbeat failed', e);
+    }
+  }, 10e3);
 })();
 
 export default client;
