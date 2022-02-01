@@ -1,17 +1,11 @@
 import snapshot from '@snapshot-labs/snapshot.js';
+import snapshotNetworks from '@snapshot-labs/snapshot.js/src/networks.json';
 import redis from '../redis';
-
-const networks = {
-  '1': 7929876,
-  '137': 9834491,
-  '100': 4108192,
-  '42161': 256508
-};
 
 async function tsToBlockNum(network, ts) {
   const provider = snapshot.utils.getProvider(network);
   let [from, to] = await Promise.all([
-    provider.getBlock(networks[network] || 1),
+    provider.getBlock(snapshotNetworks[network]?.start || 1),
     provider.getBlock('latest')
   ]);
   if (ts > to.timestamp) return 'latest';
@@ -73,7 +67,7 @@ export default async function query(_parent, args) {
   if (!Array.isArray(networks)) networks = [networks];
 
   // Check cache
-  console.log('Check cache', ts, networks);
+  // console.log('Check cache', ts, networks);
   const cache: any = await redis.hGetAll(`blocks:${ts}`);
 
   const p: any[] = [];
@@ -84,20 +78,28 @@ export default async function query(_parent, args) {
       p.push(tsToBlockNum(network, ts));
     }
   });
-  const blockNums = await Promise.all(p);
-  const blockNumsObj = Object.fromEntries(blockNums.map((blockNum, i) => [networks[i], blockNum]));
 
-  // Cache results
-  const multi = redis.multi();
-  Object.entries(blockNumsObj).forEach(([network, blockNum]: any) => {
-    if (![0, 'error', 'latest'].includes(blockNum)) multi.hSet(`blocks:${ts}`, network, blockNum);
-  });
-  multi.exec();
+  try {
+    const blockNums = await Promise.all(p);
+    const blockNumsObj = Object.fromEntries(
+      blockNums.map((blockNum, i) => [networks[i], blockNum])
+    );
 
-  return Object.entries(blockNumsObj).map((block: any) => {
-    return {
-      network: block[0],
-      number: parseInt(block[1])
-    };
-  });
+    // Cache results
+    const multi = redis.multi();
+    Object.entries(blockNumsObj).forEach(([network, blockNum]: any) => {
+      if (![0, 'error', 'latest'].includes(blockNum)) multi.hSet(`blocks:${ts}`, network, blockNum);
+    });
+    multi.exec();
+
+    return Object.entries(blockNumsObj).map((block: any) => {
+      return {
+        network: block[0],
+        number: parseInt(block[1])
+      };
+    });
+  } catch (e) {
+    console.log('Get block failed', e);
+    throw new Error('server error');
+  }
 }
