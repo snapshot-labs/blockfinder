@@ -1,5 +1,5 @@
 import { graphqlHTTP } from 'express-graphql';
-import { makeExecutableSchema } from 'graphql-tools';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 import blocks from './blocks';
 import defaultQuery from './examples';
 import typeDefs from './schema';

@@ -4,7 +4,7 @@ let client;
 
 (async () => {
   client = createClient({ url: process.env.DATABASE_URL });
-  client.on('error', err => console.log(err));
+  client.on('error', (err) => console.log(err));
   await client.connect();
   setInterval(() => client.get('heartbeat'), 30e3);
 })();
