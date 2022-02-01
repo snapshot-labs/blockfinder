@@ -68,7 +68,12 @@ export default async function query(_parent, args) {
 
   // Check cache
   // console.log('Check cache', ts, networks);
-  const cache: any = await redis.hGetAll(`blocks:${ts}`);
+  let cache = {};
+  try {
+    cache = await redis.hGetAll(`blocks:${ts}`);
+  } catch (e) {
+    console.log('Redis failed', e);
+  }
 
   const p: any[] = [];
   networks.forEach((network) => {
@@ -90,7 +95,11 @@ export default async function query(_parent, args) {
     Object.entries(blockNumsObj).forEach(([network, blockNum]: any) => {
       if (![0, 'error', 'latest'].includes(blockNum)) multi.hSet(`blocks:${ts}`, network, blockNum);
     });
-    multi.exec();
+    try {
+      multi.exec();
+    } catch (e) {
+      console.log('Redis hSet failed', e);
+    }
 
     return Object.entries(blockNumsObj).map((block: any) => {
       return {
