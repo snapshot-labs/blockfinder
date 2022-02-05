@@ -13,7 +13,7 @@ async function tsToBlockNum(network, ts) {
 
   let steps = 0;
   let range = to.number - from.number;
-  while (![1, 0].includes(range)) {
+  while (range > 1) {
     steps++;
     // console.log('From', from.number, 'to', to.number);
     // console.log('Range', range);
