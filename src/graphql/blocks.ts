@@ -66,10 +66,12 @@ export default async function query(_parent, args) {
   const ts: any = where?.ts || 0;
   if (!Array.isArray(networks)) networks = [networks];
 
+  console.log('Request', ts, networks);
+
   // Check cache
-  // console.log('Check cache', ts, networks);
   let cache = {};
   try {
+    // console.log('Check cache', ts, networks);
     cache = await redis.hGetAll(`blocks:${ts}`);
   } catch (e) {
     console.log('Redis failed', e);
