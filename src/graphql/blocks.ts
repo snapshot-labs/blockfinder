@@ -106,7 +106,8 @@ export default async function query(_parent, args) {
     return Object.entries(blockNumsObj).map((block: any) => {
       return {
         network: block[0],
-        number: parseInt(block[1])
+        number: typeof block[1] === 'string' ? null : parseInt(block[1]),
+        latest: block[1] === 'latest'
       };
     });
   } catch (e) {

@@ -12,5 +12,6 @@ input Where {
 type Block {
   network: String
   number: Int
+  latest: Boolean
 }
 `;
