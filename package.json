@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@graphql-tools/schema": "^8.3.1",
-    "@snapshot-labs/snapshot.js": "^0.3.57",
+    "@snapshot-labs/snapshot.js": "^0.3.62",
     "body-parser": "^1.19.2",
     "cors": "^2.8.5",
     "eslint": "^6.7.2",
@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.11",
-    "@types/node": "^17.0.17",
+    "@types/node": "^17.0.23",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "eslint-plugin-prettier": "^3.1.3",
