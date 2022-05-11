@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@graphql-tools/schema": "^8.3.10",
-    "@snapshot-labs/snapshot.js": "^0.3.78",
+    "@snapshot-labs/snapshot.js": "^0.3.79",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "eslint": "^6.7.2",
