@@ -6,8 +6,8 @@ import graphql from './graphql';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json({ limit: '4mb' }));
-app.use(bodyParser.urlencoded({ limit: '4mb', extended: false }));
+app.use(express.json({ limit: '4mb' }));
+app.use(express.urlencoded({ limit: '4mb', extended: false }));
 app.use(cors({ maxAge: 86400 }));
 app.set('trust proxy', 1);
 app.use('/graphql', graphql);
