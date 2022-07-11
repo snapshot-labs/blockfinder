@@ -1,17 +1,9 @@
-import { StaticJsonRpcProvider } from '@ethersproject/providers';
+import snapshot from '@snapshot-labs/snapshot.js';
 import redis from '../redis';
 import starts from '../starts.json';
 
-const providers = {};
-
-function getProvider(network) {
-  const url = `https://brovider.xyz/${network}`;
-  providers[network] = new StaticJsonRpcProvider(url);
-  return providers[network];
-}
-
 async function tsToBlockNum(network, ts) {
-  const provider = getProvider(network);
+  const provider = snapshot.utils.getProvider(network);
   let [from, to] = await Promise.all([
     provider.getBlock(starts[network] || 1),
     provider.getBlock('latest')
