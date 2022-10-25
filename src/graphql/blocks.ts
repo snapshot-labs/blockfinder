@@ -1,6 +1,11 @@
 import snapshot from '@snapshot-labs/snapshot.js';
+import networks from '@snapshot-labs/snapshot.js/src/networks.json';
 import redis from '../redis';
-import starts from '../starts.json';
+
+const starts: any = {};
+Object.keys(networks).forEach((network) => {
+  starts[network] = networks[network].start || 1;
+});
 
 async function tsToBlockNum(network, ts) {
   const provider = snapshot.utils.getProvider(network);
