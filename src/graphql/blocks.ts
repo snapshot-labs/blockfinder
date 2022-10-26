@@ -81,7 +81,8 @@ async function tsToBlockNum(network, ts) {
     const responseData = await res.json();
     if (
       responseData.status !== '1' ||
-      (responseData.result instanceof String && responseData.result.toLowerCase().includes('error'))
+      (typeof responseData.result === 'string' &&
+        responseData.result.toLowerCase().includes('error'))
     )
       throw new Error(`API error message: ${responseData.message}, result: ${responseData.result}`);
 
