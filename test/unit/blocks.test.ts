@@ -11,7 +11,7 @@ describe('block number', () => {
 
       expect(blockWithApi).toBe(15838700);
       expect(blockWithNode).toBe(15838700);
-    }, 20000);
+    }, 40000);
   });
 
   describe('on Polygon Mainnet', () => {
@@ -21,6 +21,6 @@ describe('block number', () => {
 
       expect(blockWithApi).toBe(34858621);
       expect(blockWithNode).toBe(34858621);
-    }, 20000);
+    }, 40000);
   });
 });
