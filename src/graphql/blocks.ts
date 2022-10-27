@@ -8,7 +8,7 @@ Object.keys(networks).forEach((network) => {
   starts[network] = networks[network].start || 1;
 });
 
-async function tsToBlockWithApi(network: string, ts: number) {
+export async function tsToBlockWithApi(network: string, ts: number) {
   const explorerBaseUrl = networks[network].explorer.apiUrl ?? networks[network].explorer.url;
   const url = `${explorerBaseUrl}/api?module=block&action=getblocknobytime&timestamp=${ts}&closest=after`;
 
@@ -27,10 +27,10 @@ async function tsToBlockWithApi(network: string, ts: number) {
     (typeof responseData.result === 'string' && responseData.result.toLowerCase().includes('error'))
   )
     throw new Error(`API error message: ${responseData.message}, result: ${responseData.result}`);
-  return responseData.result.blockNumber ?? responseData.result;
+  return Number(responseData.result.blockNumber ?? responseData.result);
 }
 
-async function tsToBlockWithNode(network: string, ts: number) {
+export async function tsToBlockWithNode(network: string, ts: number) {
   const provider = snapshot.utils.getProvider(network);
   let [from, to] = await Promise.all([
     provider.getBlock(starts[network] || 1),
