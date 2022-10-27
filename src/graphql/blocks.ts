@@ -1,7 +1,7 @@
+import fetch from 'cross-fetch';
 import snapshot from '@snapshot-labs/snapshot.js';
 import networks from '@snapshot-labs/snapshot.js/src/networks.json';
 import redis from '../redis';
-import fetch from 'cross-fetch';
 
 const starts: any = {};
 Object.keys(networks).forEach((network) => {
@@ -12,21 +12,13 @@ export async function tsToBlockWithApi(network: string, ts: number) {
   const explorerBaseUrl = networks[network].explorer.apiUrl ?? networks[network].explorer.url;
   const url = `${explorerBaseUrl}/api?module=block&action=getblocknobytime&timestamp=${ts}&closest=after`;
 
-  console.log(url);
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    }
-  });
-  console.log('after call');
+  const res = await fetch(url);
   const responseData = await res.json();
   if (
     responseData.status !== '1' ||
     (typeof responseData.result === 'string' && responseData.result.toLowerCase().includes('error'))
   )
-    throw new Error(`API error message: ${responseData.message}, result: ${responseData.result}`);
+    throw new Error(`message: ${responseData.message}, result: ${responseData.result}`);
   return Number(responseData.result.blockNumber ?? responseData.result);
 }
 
@@ -92,7 +84,7 @@ async function tsToBlockNum(network: string, ts: number) {
   try {
     return tsToBlockWithApi(network, ts);
   } catch (error: any) {
-    console.log(error.message);
+    console.log('Failed to query block with API', error.message);
     return tsToBlockWithNode(network, ts);
   }
 }
