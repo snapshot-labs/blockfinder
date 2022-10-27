@@ -7,7 +7,7 @@
     "build": "tsc",
     "dev": "nodemon src/index.ts",
     "start": "node build/src/index.js",
-    "test": "yarn jest --forceExit"
+    "test": "yarn jest"
   },
   "dependencies": {
     "@ethersproject/providers": "^5.7.2",

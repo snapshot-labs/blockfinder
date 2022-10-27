@@ -1,5 +1,7 @@
 import { tsToBlockWithApi, tsToBlockWithNode } from '../../src/graphql/blocks';
 
+jest.mock('../../src/redis.ts', () => jest.fn());
+
 describe('block number', () => {
   const timestamp = 1666865075;
   describe('on Ethereum Mainnet', () => {
@@ -9,7 +11,7 @@ describe('block number', () => {
 
       expect(blockWithApi).toBe(15838700);
       expect(blockWithNode).toBe(15838700);
-    });
+    }, 10000);
   });
 
   describe('on Polygon Mainnet', () => {
@@ -19,6 +21,6 @@ describe('block number', () => {
 
       expect(blockWithApi).toBe(34858621);
       expect(blockWithNode).toBe(34858621);
-    });
+    }, 10000);
   });
 });
