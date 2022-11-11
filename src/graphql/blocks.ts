@@ -71,7 +71,7 @@ export default async function query(_parent, args) {
   const ts: any = where?.ts || 0;
   if (!Array.isArray(networks)) networks = [networks];
 
-  console.log('Request', ts, networks);
+  // console.log('Request', ts, networks);
 
   // Check cache
   let cache = {};
@@ -79,7 +79,7 @@ export default async function query(_parent, args) {
     // console.log('Check cache', ts, networks);
     cache = await redis.hGetAll(`blocks:${ts}`);
   } catch (e) {
-    console.log('Redis failed', e);
+    console.log('[error] Redis failed', e);
   }
 
   const p: any[] = [];
@@ -105,7 +105,7 @@ export default async function query(_parent, args) {
     try {
       multi.exec();
     } catch (e) {
-      console.log('Redis hSet failed', e);
+      console.log('[error] Redis hSet failed', e);
     }
 
     return Object.entries(blockNumsObj).map((block: any) => {
@@ -115,7 +115,7 @@ export default async function query(_parent, args) {
       };
     });
   } catch (e) {
-    console.log('Get block failed', networks, ts, e);
+    console.log('[error] Get block failed', networks, ts, e);
     throw new Error('server error');
   }
 }
