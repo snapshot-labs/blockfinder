@@ -1,5 +1,5 @@
 import { StaticJsonRpcProvider } from '@ethersproject/providers';
-import redis from '../redis';
+import redis from '../helpers/redis';
 
 async function tsToBlockNum(network, ts) {
   const provider = new StaticJsonRpcProvider(`https://rpc.brovider.xyz/${network}`);
@@ -64,12 +64,9 @@ export default async function query(_parent, args) {
   const ts: any = where?.ts || 0;
   if (!Array.isArray(networks)) networks = [networks];
 
-  // console.log('Request', ts, networks);
-
   // Check cache
   let cache = {};
   try {
-    // console.log('Check cache', ts, networks);
     cache = await redis.hGetAll(`blocks:${ts}`);
   } catch (e) {
     console.log('[error] Redis failed', e);
@@ -101,12 +98,10 @@ export default async function query(_parent, args) {
       console.log('[error] Redis hSet failed', e);
     }
 
-    return Object.entries(blockNumsObj).map((block: any) => {
-      return {
-        network: block[0],
-        number: parseInt(block[1])
-      };
-    });
+    return Object.entries(blockNumsObj).map((block: any) => ({
+      network: block[0],
+      number: parseInt(block[1])
+    }));
   } catch (e) {
     console.log('[error] Get block failed', networks, ts, e);
     throw new Error('server error');
