@@ -1,8 +1,12 @@
 import events from 'events';
-import { sha256 } from './utils';
+import { createHash } from 'crypto';
 
 const eventEmitter = new events.EventEmitter();
 eventEmitter.setMaxListeners(1000); // https://stackoverflow.com/a/26176922
+
+function sha256(str) {
+  return createHash('sha256').update(str).digest('hex');
+}
 
 export default async function serve(id, action, args) {
   const key = sha256(id);
