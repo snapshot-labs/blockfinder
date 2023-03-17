@@ -34,15 +34,15 @@ async function tsToBlockNum(network, ts) {
 
     let blocks: any[] = await Promise.all(
       [...new Set(blockNums)]
-        .filter((blockNum) => blockNum > from.number && blockNum < to.number)
-        .map((blockNum) => provider.getBlock(blockNum))
+        .filter(blockNum => blockNum > from.number && blockNum < to.number)
+        .map(blockNum => provider.getBlock(blockNum))
     );
     blocks = [from, ...blocks, to].sort((a, b) => a.number - b.number);
     // console.log(blocks.map((block: any) => block.number));
 
     let newFrom = false;
     let newTo = false;
-    blocks.forEach((block) => {
+    blocks.forEach(block => {
       if (block.timestamp >= ts && !newTo) newTo = block;
       if (block.timestamp <= ts) newFrom = block;
     });
@@ -76,7 +76,7 @@ export default async function query(_parent, args) {
   }
 
   const p: any[] = [];
-  networks.forEach((network) => {
+  networks.forEach(network => {
     if (cache[network]) {
       p.push(parseInt(cache[network]));
     } else {
