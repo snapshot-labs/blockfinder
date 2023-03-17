@@ -1,23 +1,16 @@
-import snapshot from '@snapshot-labs/snapshot.js';
-import networks from '@snapshot-labs/snapshot.js/src/networks.json';
+import { StaticJsonRpcProvider } from '@ethersproject/providers';
 import redis from '../redis';
 
-const starts: any = {};
-Object.keys(networks).forEach((network) => {
-  starts[network] = networks[network].start || 1;
-});
-
 async function tsToBlockNum(network, ts) {
-  const provider = snapshot.utils.getProvider(network);
-  let [from, to] = await Promise.all([
-    provider.getBlock(starts[network] || 1),
-    provider.getBlock('latest')
-  ]);
+  const provider = new StaticJsonRpcProvider(`https://rpc.brovider.xyz/${network}`);
+
+  let [from, to]: any = await Promise.all([provider.getBlock(1), provider.getBlock('latest')]);
   if (ts > to.timestamp) return 'latest';
   if (ts < from.timestamp) return 0;
 
   let steps = 0;
   let range = to.number - from.number;
+
   while (range > 1) {
     steps++;
     // console.log('From', from.number, 'to', to.number);
