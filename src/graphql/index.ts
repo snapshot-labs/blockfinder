@@ -1,9 +1,33 @@
 import { graphqlHTTP } from 'express-graphql';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import blocks from './blocks';
-import defaultQuery from './examples';
-import typeDefs from './schema';
-import serve from '../ee';
+import serve from '../helpers/ee';
+
+const typeDefs = `
+type Query {
+  blocks(where: Where): [Block]
+}
+
+input Where {
+  ts: Int
+  network: String
+  network_in: [String]
+}
+
+type Block {
+  network: String
+  number: Int
+}
+`;
+
+const defaultQuery = `
+query {
+  blocks (where: { ts: 1640000000, network_in: ["1", "100", "137"] }) {
+    network
+    number
+  }
+}
+`;
 
 const rootValue = {
   Query: {

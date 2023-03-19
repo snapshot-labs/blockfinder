@@ -1,29 +1,16 @@
-import snapshot from '@snapshot-labs/snapshot.js';
-import networks from '@snapshot-labs/snapshot.js/src/networks.json';
-import redis from '../redis';
+import { getRange, getBlock } from '../helpers/cache';
 
-const starts: any = {};
-Object.keys(networks).forEach((network) => {
-  starts[network] = networks[network].start || 1;
-});
-
-async function tsToBlockNum(network, ts) {
-  const provider = snapshot.utils.getProvider(network);
-  let [from, to] = await Promise.all([
-    provider.getBlock(starts[network] || 1),
-    provider.getBlock('latest')
-  ]);
+async function tsToBlockNum(network: string, ts: number) {
+  let [from, to]: any = await getRange(network, ts);
   if (ts > to.timestamp) return 'latest';
   if (ts < from.timestamp) return 0;
 
   let steps = 0;
   let range = to.number - from.number;
+  // console.log('From', from.number, 'to', to.number, 'range', range);
+
   while (range > 1) {
     steps++;
-    // console.log('From', from.number, 'to', to.number);
-    // console.log('Range', range);
-    // console.log('Diff', from.timestamp - ts, to.timestamp - ts);
-
     const blockNums: number[] = [];
     const blockTime = (to.timestamp - from.timestamp) / (to.number - from.number);
     const trialBlockNum = to.number - Math.ceil((to.timestamp - ts) / blockTime);
@@ -41,15 +28,15 @@ async function tsToBlockNum(network, ts) {
 
     let blocks: any[] = await Promise.all(
       [...new Set(blockNums)]
-        .filter((blockNum) => blockNum > from.number && blockNum < to.number)
-        .map((blockNum) => provider.getBlock(blockNum))
+        .filter(blockNum => blockNum > from.number && blockNum < to.number)
+        .map(blockNum => getBlock(network, blockNum))
     );
     blocks = [from, ...blocks, to].sort((a, b) => a.number - b.number);
-    // console.log(blocks.map((block: any) => block.number));
+    // console.log(cache.map((block: any) => block.number));
 
     let newFrom = false;
     let newTo = false;
-    blocks.forEach((block) => {
+    blocks.forEach(block => {
       if (block.timestamp >= ts && !newTo) newTo = block;
       if (block.timestamp <= ts) newFrom = block;
     });
@@ -71,49 +58,16 @@ export default async function query(_parent, args) {
   const ts: any = where?.ts || 0;
   if (!Array.isArray(networks)) networks = [networks];
 
-  // console.log('Request', ts, networks);
-
-  // Check cache
-  let cache = {};
   try {
-    // console.log('Check cache', ts, networks);
-    cache = await redis.hGetAll(`blocks:${ts}`);
-  } catch (e) {
-    console.log('[error] Redis failed', e);
-  }
-
-  const p: any[] = [];
-  networks.forEach((network) => {
-    if (cache[network]) {
-      p.push(parseInt(cache[network]));
-    } else {
-      p.push(tsToBlockNum(network, ts));
-    }
-  });
-
-  try {
-    const blockNums = await Promise.all(p);
+    const blockNums = await Promise.all(networks.map(network => tsToBlockNum(network, ts)));
     const blockNumsObj = Object.fromEntries(
       blockNums.map((blockNum, i) => [networks[i], blockNum])
     );
 
-    // Cache results
-    const multi = redis.multi();
-    Object.entries(blockNumsObj).forEach(([network, blockNum]: any) => {
-      if (![0, 'error', 'latest'].includes(blockNum)) multi.hSet(`blocks:${ts}`, network, blockNum);
-    });
-    try {
-      multi.exec();
-    } catch (e) {
-      console.log('[error] Redis hSet failed', e);
-    }
-
-    return Object.entries(blockNumsObj).map((block: any) => {
-      return {
-        network: block[0],
-        number: parseInt(block[1])
-      };
-    });
+    return Object.entries(blockNumsObj).map((block: any) => ({
+      network: block[0],
+      number: parseInt(block[1])
+    }));
   } catch (e) {
     console.log('[error] Get block failed', networks, ts, e);
     throw new Error('server error');
