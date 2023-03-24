@@ -45,10 +45,10 @@ async function tsToBlockNum(network: string, ts: number) {
     range = to.number - from.number;
   }
 
-  if (range === 0) console.log('Perfect match', network, ts);
+  // if (range === 0) console.log('Perfect match', network, ts);
   // console.log('From', from.number, from.timestamp, 'to', to.number, to.timestamp);
-  console.log('Block', to.number, 'at', to.timestamp);
-  console.log('Target', ts, 'network', network, 'steps', steps);
+  // console.log('Block', to.number, 'at', to.timestamp);
+  // console.log('Target', ts, 'network', network, 'steps', steps);
   return to.number;
 }
 

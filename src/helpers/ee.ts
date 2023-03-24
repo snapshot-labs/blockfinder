@@ -4,7 +4,7 @@ import { createHash } from 'crypto';
 const eventEmitter = new events.EventEmitter();
 eventEmitter.setMaxListeners(1000); // https://stackoverflow.com/a/26176922
 
-function sha256(str) {
+function sha256(str: string) {
   return createHash('sha256').update(str).digest('hex');
 }
 
