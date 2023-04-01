@@ -1,18 +1,15 @@
-import { StaticJsonRpcProvider } from '@ethersproject/providers';
+import snapshot from '@snapshot-labs/snapshot.js';
+import networks from '@snapshot-labs/snapshot.js/src/networks.json';
+
+const starts: any = {};
+Object.keys(networks).forEach(network => {
+  starts[network] = networks[network].start || 1;
+});
 
 const blocks = {};
 
-const providers = {};
-
-export function getProvider(network: string): StaticJsonRpcProvider {
-  if (!providers[network])
-    providers[network] = new StaticJsonRpcProvider(`https://rpc.brovider.xyz/${network}`);
-
-  return providers[network];
-}
-
 export async function getBlock(network: string, blockNum: number) {
-  const provider = getProvider(network);
+  const provider = snapshot.utils.getProvider(network);
   const block = await provider.getBlock(blockNum);
 
   if (!blocks[network]) blocks[network] = {};
@@ -25,7 +22,7 @@ export async function getBlock(network: string, blockNum: number) {
 }
 
 export async function getRange(network: string, ts: number) {
-  const provider = getProvider(network);
+  const provider = snapshot.utils.getProvider(network);
   let from: any = false;
   let to: any = false;
 
@@ -45,5 +42,5 @@ export async function getRange(network: string, ts: number) {
 
   if (from && to) return [from, to];
 
-  return await Promise.all([provider.getBlock(1), provider.getBlock('latest')]);
+  return await Promise.all([provider.getBlock(starts[network]), provider.getBlock('latest')]);
 }

@@ -5,12 +5,12 @@ async function tsToBlockNum(network: string, ts: number) {
   if (ts > to.timestamp) return 'latest';
   if (ts < from.timestamp) return 0;
 
-  let steps = 0;
+  // let steps = 0;
   let range = to.number - from.number;
   // console.log('From', from.number, 'to', to.number, 'range', range);
 
   while (range > 1) {
-    steps++;
+    // steps++;
     const blockNums: number[] = [];
     const blockTime = (to.timestamp - from.timestamp) / (to.number - from.number);
     const trialBlockNum = to.number - Math.ceil((to.timestamp - ts) / blockTime);
