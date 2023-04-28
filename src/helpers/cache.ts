@@ -27,7 +27,7 @@ export async function getRange(network: string, ts: number) {
   let to: any = false;
 
   if (blocks[network]) {
-    console.time('getRange');
+    // console.time('getRange');
 
     Object.entries(blocks[network])
       .map(([blockTs, blockNum]: any[]) => [parseInt(blockTs.slice(1)), blockNum])
@@ -37,7 +37,7 @@ export async function getRange(network: string, ts: number) {
         if (blockTs <= ts) from = { timestamp: blockTs, number: blockNum };
       });
 
-    console.timeEnd('getRange');
+    // console.timeEnd('getRange');
   }
 
   if (from && to) return [from, to];
