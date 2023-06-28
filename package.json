@@ -14,7 +14,7 @@
   "prettier": "@snapshot-labs/prettier-config",
   "dependencies": {
     "@graphql-tools/schema": "^8.3.10",
-    "@snapshot-labs/snapshot.js": "^0.4.100",
+    "@snapshot-labs/snapshot.js": "^0.4.101",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-graphql": "^0.12.0",
