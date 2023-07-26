@@ -1,4 +1,5 @@
 import { getRange, getBlock } from '../helpers/cache';
+import { capture } from '../helpers/sentry';
 
 async function tsToBlockNum(network: string, ts: number) {
   let [from, to]: any = await getRange(network, ts);
@@ -68,8 +69,8 @@ export default async function query(_parent, args) {
       network: block[0],
       number: parseInt(block[1])
     }));
-  } catch (e) {
-    console.log('[error] Get block failed', networks, ts, e);
+  } catch (e: any) {
+    capture(e);
     throw new Error('server error');
   }
 }
