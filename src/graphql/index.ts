@@ -1,7 +1,7 @@
 import { graphqlHTTP } from 'express-graphql';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import blocks from './blocks';
-import serve from '../helpers/ee';
+import serve from '../helpers/requestDeduplicator';
 
 const typeDefs = `
 type Query {
