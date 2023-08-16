@@ -10,14 +10,13 @@ export default function serve(id, action, args) {
   const key = sha256(id);
   if (!ongoingRequests.has(key)) {
     const requestPromise = action(...args)
-      .then(result => {
-        ongoingRequests.delete(key);
-        return result;
-      })
+      .then(result => result)
       .catch(e => {
         console.log('[requestDeduplicator] request error', e);
-        ongoingRequests.delete(key);
         throw e;
+      })
+      .finally(() => {
+        ongoingRequests.delete(key);
       });
     ongoingRequests.set(key, requestPromise);
   }
