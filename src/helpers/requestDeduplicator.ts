@@ -15,7 +15,7 @@ export default async function serve(id, action, args) {
         return result;
       })
       .catch(e => {
-        console.log('EventEmitter Error', e);
+        console.log('[requestDeduplicator] request error', e);
         ongoingRequests.delete(key);
         throw e;
       });
