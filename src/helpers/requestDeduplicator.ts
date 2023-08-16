@@ -6,7 +6,7 @@ function sha256(str: string) {
 
 const ongoingRequests = new Map();
 
-export default async function serve(id, action, args) {
+export default function serve(id, action, args) {
   const key = sha256(id);
   if (!ongoingRequests.has(key)) {
     const requestPromise = action(...args)
