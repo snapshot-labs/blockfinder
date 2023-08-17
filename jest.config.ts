@@ -17,5 +17,13 @@ export default {
   testEnvironment: 'jest-environment-node-single-context',
   moduleFileExtensions: ['js', 'ts'],
   testPathIgnorePatterns: ['build/'],
-  verbose: true
+  verbose: true,
+  transform: {
+    '^.+\\.ts?$': [
+      'ts-jest',
+      {
+        isolatedModules: true
+      }
+    ]
+  }
 };
