@@ -13,7 +13,6 @@ export default function serve(id, action, args) {
     const requestPromise = action(...args)
       .then(result => result)
       .catch(e => {
-        console.log('[requestDeduplicator] request error', e);
         throw e;
       })
       .finally(() => {
