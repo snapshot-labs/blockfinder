@@ -13,3 +13,8 @@ const networksCount = new client.Gauge({
   help: 'Number of networks.'
 });
 networksCount.set(Object.keys(networks).length);
+
+export const requestDeduplicatorSize = new client.Gauge({
+  name: 'request_deduplicator_size',
+  help: 'Total number of items in the deduplicator queue'
+});
