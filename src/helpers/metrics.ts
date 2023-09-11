@@ -1,4 +1,5 @@
-import init from '@snapshot-labs/snapshot-metrics';
+import init, { client } from '@snapshot-labs/snapshot-metrics';
+import networks from '@snapshot-labs/snapshot.js/src/networks.json';
 import { Express } from 'express';
 
 export default function initMetrics(app: Express) {
@@ -6,3 +7,9 @@ export default function initMetrics(app: Express) {
     whitelistedPath: [/^\/$/]
   });
 }
+
+const networksCount = new client.Gauge({
+  name: 'networks_count',
+  help: 'Number of networks.'
+});
+networksCount.set(Object.keys(networks).length);
