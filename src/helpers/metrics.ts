@@ -5,7 +5,7 @@ import { Express } from 'express';
 export default function initMetrics(app: Express) {
   init(app, {
     whitelistedPath: [/^\/$/],
-    errorHandler: (e: any) => capture(e)
+    errorHandler: capture
   });
 }
 
