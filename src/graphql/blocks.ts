@@ -1,5 +1,9 @@
-import { getRange, getBlock } from '../helpers/cache';
+import { GraphQLError } from 'graphql';
 import { capture } from '@snapshot-labs/snapshot-sentry';
+import networks from '@snapshot-labs/snapshot.js/src/networks.json';
+import { getRange, getBlock } from '../helpers/cache';
+
+const networkIds = Object.keys(networks);
 
 async function tsToBlockNum(network: string, ts: number) {
   let [from, to]: any = await getRange(network, ts);
@@ -58,6 +62,13 @@ export default async function query(_parent, args) {
   let networks: any = where?.network_in || where?.network || '1';
   const ts: any = where?.ts || 0;
   if (!Array.isArray(networks)) networks = [networks];
+
+  const invalidIds = networks.filter(x => !networkIds.includes(x));
+  if (invalidIds.length > 0) {
+    throw new GraphQLError('invalid network', {
+      extensions: { code: 'INVALID_NETWORK', invalidIds }
+    });
+  }
 
   try {
     const blockNums = await Promise.all(networks.map(network => tsToBlockNum(network, ts)));
