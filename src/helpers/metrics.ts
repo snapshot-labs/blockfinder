@@ -1,10 +1,12 @@
 import init, { client } from '@snapshot-labs/snapshot-metrics';
-import networks from '@snapshot-labs/snapshot.js/src/networks.json';
+import { capture } from '@snapshot-labs/snapshot-sentry';
 import { Express } from 'express';
+import networks from '@snapshot-labs/snapshot.js/src/networks.json';
 
 export default function initMetrics(app: Express) {
   init(app, {
-    whitelistedPath: [/^\/$/]
+    whitelistedPath: [/^\/$/],
+    errorHandler: capture
   });
 }
 
