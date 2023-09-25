@@ -1,4 +1,5 @@
 import { createHash } from 'crypto';
+import { requestDeduplicatorSize } from './metrics';
 
 function sha256(str: string) {
   return createHash('sha256').update(str).digest('hex');
@@ -12,7 +13,6 @@ export default function serve(id, action, args) {
     const requestPromise = action(...args)
       .then(result => result)
       .catch(e => {
-        console.log('[requestDeduplicator] request error', e);
         throw e;
       })
       .finally(() => {
@@ -21,5 +21,6 @@ export default function serve(id, action, args) {
     ongoingRequests.set(key, requestPromise);
   }
 
+  requestDeduplicatorSize.set(ongoingRequests.size);
   return ongoingRequests.get(key);
 }
