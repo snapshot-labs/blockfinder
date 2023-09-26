@@ -1,5 +1,6 @@
-import { getRange, getBlock } from '../helpers/cache';
+import { GraphQLError } from 'graphql';
 import { capture } from '@snapshot-labs/snapshot-sentry';
+import { getRange, getBlock } from '../helpers/cache';
 
 async function tsToBlockNum(network: string, ts: number) {
   let [from, to]: any = await getRange(network, ts);
@@ -70,6 +71,12 @@ export default async function query(_parent, args) {
       number: parseInt(block[1])
     }));
   } catch (e: any) {
+    if (e.status === 404) {
+      throw new GraphQLError('invalid network', {
+        extensions: { code: 'INVALID_NETWORK' }
+      });
+    }
+
     capture(e);
     throw new Error('server error');
   }
