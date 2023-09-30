@@ -60,7 +60,7 @@ export default async function query(_parent, args) {
   const ts: any = where?.ts || 0;
   if (!Array.isArray(networks)) networks = [networks];
 
-  if (ts > Math.floor(Date.now() / 1000) || ts <= 0) {
+  if (ts > Math.floor(Date.now() / 1000) || ts < 0) {
     throw new GraphQLError('timestamp must be in the past', {
       extensions: { code: 'INVALID_TIMESTAMP' }
     });

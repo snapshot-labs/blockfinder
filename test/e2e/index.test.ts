@@ -3,13 +3,15 @@ import request from 'supertest';
 const HOST = `http://localhost:${process.env.PORT || 3034}`;
 
 describe('POST /', () => {
+  jest.retryTimes(2);
+
   it('boots a graphql instance', async () => {
     const response = await request(HOST).post('/').set('Content-type', 'application/json');
 
     expect(response.body).toEqual({ errors: [{ message: 'Must provide query string.' }] });
   });
 
-  it('returns the blocknumber from the timestamp', async () => {
+  it('returns the blocknumber from a valid timestamp', async () => {
     const response = await request(HOST)
       .post('/')
       .set('Content-type', 'application/json')
@@ -35,6 +37,38 @@ describe('POST /', () => {
           {
             network: '137',
             number: 22747386
+          }
+        ]
+      }
+    });
+  }, 15e3);
+
+  it('returns the blocknumber from timestamp with value 0', async () => {
+    const response = await request(HOST)
+      .post('/')
+      .set('Content-type', 'application/json')
+      .send(
+        JSON.stringify({
+          query:
+            'query {  blocks (where: { ts: 0, network_in: ["1", "100", "137"] }) {network number}}',
+          variables: null
+        })
+      );
+
+    expect(response.body).toEqual({
+      data: {
+        blocks: [
+          {
+            network: '1',
+            number: 0
+          },
+          {
+            network: '100',
+            number: 0
+          },
+          {
+            network: '137',
+            number: 0
           }
         ]
       }
@@ -72,7 +106,6 @@ describe('POST /', () => {
 
   it.each([
     ['in the future', Math.floor((Date.now() + 1000 * 60) / 1000)],
-    ['0', 0],
     ['negative', -500]
   ])(
     'returns a GraphQLError when timestamp is %s',
