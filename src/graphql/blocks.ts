@@ -74,7 +74,7 @@ export default async function query(_parent, args) {
 
     return Object.entries(blockNumsObj).map((block: any) => ({
       network: block[0],
-      number: parseInt(block[1])
+      number: block[1]
     }));
   } catch (e: any) {
     if (e.status === 404) {

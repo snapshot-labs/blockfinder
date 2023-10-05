@@ -43,6 +43,31 @@ describe('POST /', () => {
     });
   }, 15e3);
 
+  it('returns latest blocknumber from current timestamp', async () => {
+    const response = await request(HOST)
+      .post('/')
+      .set('Content-type', 'application/json')
+      .send(
+        JSON.stringify({
+          query: `query {  blocks (where: { ts: ${Math.floor(
+            Date.now() / 1000
+          )}, network_in: ["1"] }) {network number}}`,
+          variables: null
+        })
+      );
+
+    expect(response.body).toEqual({
+      data: {
+        blocks: [
+          {
+            network: '1',
+            number: 'latest'
+          }
+        ]
+      }
+    });
+  }, 15e3);
+
   it('returns the blocknumber from timestamp with value 0', async () => {
     const response = await request(HOST)
       .post('/')
