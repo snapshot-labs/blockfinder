@@ -1,3 +1,4 @@
+import { capture } from '@snapshot-labs/snapshot-sentry';
 import snapshot from '@snapshot-labs/snapshot.js';
 import networks from '@snapshot-labs/snapshot.js/src/networks.json';
 
@@ -12,13 +13,19 @@ export async function getBlock(network: string, blockNum: number) {
   const provider = snapshot.utils.getProvider(network);
   const block = await provider.getBlock(blockNum);
 
-  if (!blocks[network]) blocks[network] = {};
-  blocks[network][`_${block.timestamp}`] = block.number;
+  if (block.timestamp) {
+    if (!blocks[network]) blocks[network] = {};
+    blocks[network][`_${block.timestamp}`] = block.number;
 
-  return {
-    number: block.number,
-    timestamp: block.timestamp
-  };
+    return {
+      number: block.number,
+      timestamp: block.timestamp
+    };
+  }
+
+  const e = new Error('Invalid block response');
+  capture(e, { block: JSON.stringify(block) });
+  return Promise.reject(e);
 }
 
 export async function getRange(network: string, ts: number) {
