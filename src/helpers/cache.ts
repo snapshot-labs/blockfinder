@@ -13,7 +13,7 @@ export async function getBlock(network: string, blockNum: number) {
   const provider = snapshot.utils.getProvider(network);
   const block = await provider.getBlock(blockNum);
 
-  if (block.timestamp) {
+  if (block?.timestamp) {
     if (!blocks[network]) blocks[network] = {};
     blocks[network][`_${block.timestamp}`] = block.number;
 
