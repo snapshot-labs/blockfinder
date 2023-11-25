@@ -59,7 +59,8 @@ query {
 
 const rootValue = {
   Query: {
-    blocks: (parent, args) => serve(JSON.stringify(args), blocks, [parent, args])
+    blocks: (parent, args) =>
+      serve(JSON.stringify(args), blocks, [parent, args])
   },
   LatestOrBlockNumber
 };

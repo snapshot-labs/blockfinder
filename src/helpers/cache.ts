@@ -37,7 +37,10 @@ export async function getRange(network: string, ts: number) {
     // console.time('getRange');
 
     Object.entries(blocks[network])
-      .map(([blockTs, blockNum]: any[]) => [parseInt(blockTs.slice(1)), blockNum])
+      .map(([blockTs, blockNum]: any[]) => [
+        parseInt(blockTs.slice(1)),
+        blockNum
+      ])
       .sort((a, b) => a[0] - b[0])
       .forEach(([blockTs, blockNum]: number[]) => {
         if (blockTs >= ts && !to) to = { timestamp: blockTs, number: blockNum };
@@ -49,5 +52,8 @@ export async function getRange(network: string, ts: number) {
 
   if (from && to) return [from, to];
 
-  return await Promise.all([provider.getBlock(starts[network]), provider.getBlock('latest')]);
+  return await Promise.all([
+    provider.getBlock(starts[network]),
+    provider.getBlock('latest')
+  ]);
 }
