@@ -14,8 +14,10 @@ async function tsToBlockNum(network: string, ts: number) {
   while (range > 1) {
     // steps++;
     const blockNums: number[] = [];
-    const blockTime = (to.timestamp - from.timestamp) / (to.number - from.number);
-    const trialBlockNum = to.number - Math.ceil((to.timestamp - ts) / blockTime);
+    const blockTime =
+      (to.timestamp - from.timestamp) / (to.number - from.number);
+    const trialBlockNum =
+      to.number - Math.ceil((to.timestamp - ts) / blockTime);
     // console.log('Trial', trialBlockNum);
 
     blockNums.push(trialBlockNum);
@@ -67,7 +69,9 @@ export default async function query(_parent, args) {
   }
 
   try {
-    const blockNums = await Promise.all(networks.map(network => tsToBlockNum(network, ts)));
+    const blockNums = await Promise.all(
+      networks.map(network => tsToBlockNum(network, ts))
+    );
     const blockNumsObj = Object.fromEntries(
       blockNums.map((blockNum, i) => [networks[i], blockNum])
     );
