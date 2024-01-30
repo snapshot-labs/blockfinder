@@ -67,7 +67,7 @@ export default async function query(_parent, args) {
 
   if (networks.some((network: string) => !validNetworkIds.includes(network))) {
     throw new GraphQLError('invalid network', {
-      extensions: { code: 'INVALID_TIMESTAMP' }
+      extensions: { code: 'INVALID_NETWORK' }
     });
   }
 
