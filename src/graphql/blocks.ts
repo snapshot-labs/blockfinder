@@ -1,6 +1,9 @@
 import { GraphQLError } from 'graphql';
 import { capture } from '@snapshot-labs/snapshot-sentry';
 import { getRange, getBlock } from '../helpers/cache';
+import availableNetworks from '@snapshot-labs/snapshot.js/src/networks.json';
+
+const validNetworkIds = Object.keys(availableNetworks);
 
 async function tsToBlockNum(network: string, ts: number) {
   let [from, to]: any = await getRange(network, ts);
@@ -61,6 +64,12 @@ export default async function query(_parent, args) {
   let networks: any = where?.network_in || where?.network || '1';
   const ts: any = where?.ts || 0;
   if (!Array.isArray(networks)) networks = [networks];
+
+  if (networks.some((network: string) => !validNetworkIds.includes(network))) {
+    throw new GraphQLError('invalid network', {
+      extensions: { code: 'INVALID_NETWORK' }
+    });
+  }
 
   if (ts > Math.floor(Date.now() / 1000) || ts < 0) {
     throw new GraphQLError('timestamp must be in the past', {
