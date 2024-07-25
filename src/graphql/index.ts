@@ -1,5 +1,5 @@
-import { graphqlHTTP } from 'express-graphql';
 import { makeExecutableSchema } from '@graphql-tools/schema';
+import { graphqlHTTP } from 'express-graphql';
 import { GraphQLScalarType, Kind } from 'graphql';
 import blocks from './blocks';
 import serve from '../helpers/requestDeduplicator';

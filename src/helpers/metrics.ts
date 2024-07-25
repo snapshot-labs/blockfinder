@@ -1,7 +1,7 @@
 import init, { client } from '@snapshot-labs/snapshot-metrics';
 import { capture } from '@snapshot-labs/snapshot-sentry';
-import { Express } from 'express';
 import networks from '@snapshot-labs/snapshot.js/src/networks.json';
+import { Express } from 'express';
 
 export default function initMetrics(app: Express) {
   init(app, {

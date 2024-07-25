@@ -1,7 +1,7 @@
 import 'dotenv/config';
-import express from 'express';
+import { fallbackLogger, initLogger } from '@snapshot-labs/snapshot-sentry';
 import cors from 'cors';
-import { initLogger, fallbackLogger } from '@snapshot-labs/snapshot-sentry';
+import express from 'express';
 import graphql from './graphql';
 import initMetrics from './helpers/metrics';
 

@@ -1,7 +1,7 @@
-import { GraphQLError } from 'graphql';
 import { capture } from '@snapshot-labs/snapshot-sentry';
-import { getRange, getBlock } from '../helpers/cache';
 import availableNetworks from '@snapshot-labs/snapshot.js/src/networks.json';
+import { GraphQLError } from 'graphql';
+import { getBlock, getRange } from '../helpers/cache';
 
 const validNetworkIds = Object.keys(availableNetworks);
 
