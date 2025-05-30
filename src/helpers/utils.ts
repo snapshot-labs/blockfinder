@@ -5,8 +5,10 @@ export type Block = {
   timestamp: number;
 };
 
-const STARKNET_NETWORKS = ['0x534e5f4d41494e', '0x534e5f5345504f4c4941'];
+const STARKNET_MAINNET_ID = '0x534e5f4d41494e'; // StarkNet Mainnet
+const STARKNET_TESTNET_ID = '0x534e5f5345504f4c4941'; // StarkNet Testnet
 
+const STARKNET_NETWORKS = [STARKNET_MAINNET_ID, STARKNET_TESTNET_ID];
 export async function getBlockNumber(
   network: string,
   blockNum: number | 'latest'
