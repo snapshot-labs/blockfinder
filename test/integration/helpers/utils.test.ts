@@ -23,9 +23,7 @@ describe('getBlockNumber()', () => {
   });
 
   it('should throw error when provider getBlock fails', async () => {
-    await expect(() =>
-      getBlockNumber('1', 12345678912345678)
-    ).rejects.toThrow();
+    await expect(getBlockNumber('1', 12345678912345678)).rejects.toThrow();
   });
 
   it('should throw error on invalid network', async () => {
