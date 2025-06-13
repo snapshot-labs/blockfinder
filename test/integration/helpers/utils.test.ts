@@ -1,6 +1,8 @@
 import { getBlockNumber } from '../../../src/helpers/utils';
 
 describe('getBlockNumber()', () => {
+  jest.setTimeout(15000); // 15 seconds for all tests in this block
+
   it('should return an object with timestamp and block number', async () => {
     const result = await getBlockNumber('1', 'latest');
 
