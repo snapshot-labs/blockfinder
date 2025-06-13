@@ -24,7 +24,7 @@ export async function getBlock(
 
   const e = new Error('Invalid block response');
   capture(e, { block: JSON.stringify(block) });
-  return Promise.reject(e);
+  return Promise.reject<Block>(e);
 }
 
 export async function getRange(
