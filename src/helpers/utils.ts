@@ -1,4 +1,5 @@
 import snapshot from '@snapshot-labs/snapshot.js';
+import networks from '@snapshot-labs/snapshot.js/src/networks.json';
 
 export type Block = {
   number: number;
@@ -17,10 +18,6 @@ interface EthereumBlockResponse {
 
 type BlockResponse = StarknetBlockResponse | EthereumBlockResponse;
 
-const STARKNET_MAINNET_ID = '0x534e5f4d41494e';
-const STARKNET_TESTNET_ID = '0x534e5f5345504f4c4941';
-const STARKNET_NETWORKS = [STARKNET_MAINNET_ID, STARKNET_TESTNET_ID];
-
 export async function getBlockNumber(
   network: string,
   blockNum: number | 'latest'
@@ -36,7 +33,7 @@ function interpretResult(network: string, result: BlockResponse | null): Block {
     throw new Error(`Invalid block response for network ${network}`);
   }
 
-  if (STARKNET_NETWORKS.includes(network)) {
+  if (networks[network].starknet) {
     const starknetResult = result as StarknetBlockResponse;
     return {
       number: starknetResult.block_number,
