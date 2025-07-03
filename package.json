@@ -10,7 +10,8 @@
     "dev": "nodemon src/index.ts",
     "start": "node build/src/index.js",
     "start:test:e2e": "dotenv -e test/.env.test yarn dev",
-    "test": "PORT=3034 start-server-and-test --expect 405 'yarn start:test:e2e' 3034 'dotenv -e test/.env.test jest --runInBand'"
+    "test": "PORT=3034 start-server-and-test --expect 405 'yarn start:test:e2e' 3034 'dotenv -e test/.env.test jest --runInBand'",
+    "test:integration": "jest integration/"
   },
   "eslintConfig": {
     "extends": "@snapshot-labs"
