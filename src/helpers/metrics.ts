@@ -6,7 +6,10 @@ import { Express } from 'express';
 export default function initMetrics(app: Express) {
   init(app, {
     whitelistedPath: [/^\/$/],
-    errorHandler: capture
+    errorHandler: capture,
+    promBundleOptions: {
+      buckets: [0.03, 0.3, 1.5, 3, 5, 7, 10]
+    }
   });
 }
 
