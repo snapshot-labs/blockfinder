@@ -8,7 +8,7 @@ import initMetrics from './helpers/metrics';
 const app = express();
 const PORT = process.env.PORT || 3004;
 
-initLogger(app);
+initLogger();
 initMetrics(app);
 
 app.disable('x-powered-by');
