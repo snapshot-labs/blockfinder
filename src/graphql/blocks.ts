@@ -89,14 +89,14 @@ export default async function query(_parent, args) {
       network: block[0],
       number: block[1]
     }));
-  } catch (e: any) {
-    if (e.status === 404) {
+  } catch (err: any) {
+    if (err.status === 404) {
       throw new GraphQLError('invalid network', {
         extensions: { code: 'INVALID_NETWORK' }
       });
     }
 
-    capture(e);
+    capture(err);
     throw new Error('server error');
   }
 }
