@@ -1501,17 +1501,17 @@
     node-fetch "^2.7.0"
     prom-client "^14.2.0"
 
-"@snapshot-labs/snapshot-sentry@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@snapshot-labs/snapshot-sentry/-/snapshot-sentry-2.0.0.tgz#17b3ce6b488e6857718f0c85fda90991c9b034e5"
-  integrity sha512-lTQk/0nHll9WN1hhipzk/l9wq1EiYVH/XAGd+XnqUYKG5UIkeC6DQ9tffkA2M+f2Y1+9GUL85sFLk/B7/G1uJg==
+"@snapshot-labs/snapshot-sentry@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@snapshot-labs/snapshot-sentry/-/snapshot-sentry-2.1.0.tgz#c97ef80537ed8f31f8ca4da6ce0f703d8f413b75"
+  integrity sha512-JI/gNF03Cb8gsyLFpRTR1hBHn7SmBP7ibLSmQbmv7p7vDfvsjPrG8rNc+w1HDFyHLpLxNVLpvlMCtEuWb4Yotw==
   dependencies:
     "@sentry/node" "^10.52.0"
 
-"@snapshot-labs/snapshot.js@^0.14.21":
-  version "0.14.21"
-  resolved "https://registry.yarnpkg.com/@snapshot-labs/snapshot.js/-/snapshot.js-0.14.21.tgz#409d3d538c229cb0c51a9b3e173a906ecc739b2a"
-  integrity sha512-DnkK3ttbk5XAHbWQPn77RC4pRG0HkPKu74gfVrgsGQ5TzCCikQhpduJa/ZLkJfiVlh1M/jPBgqiNo9B5l7jtag==
+"@snapshot-labs/snapshot.js@^0.14.22":
+  version "0.14.22"
+  resolved "https://registry.yarnpkg.com/@snapshot-labs/snapshot.js/-/snapshot.js-0.14.22.tgz#898689c6e13ed68de5b9abd100793497fac1352a"
+  integrity sha512-caUU2Rs2g98ZoyHoJxDcmXIprkxZtSTPNep0ws9AS1OAQIMfKhHza+CXQ1uItAm3H1z9q0cah9ERbAmzPDZ1pg==
   dependencies:
     "@ensdomains/eth-ens-namehash" "^2.0.15"
     "@ethersproject/abi" "^5.6.4"
