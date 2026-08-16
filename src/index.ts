@@ -1,5 +1,8 @@
 import 'dotenv/config';
-import { fallbackLogger, initLogger } from '@snapshot-labs/snapshot-sentry';
+// Keep between dotenv/config and express: it needs SENTRY_DSN loaded, and Sentry
+// instruments express at init. Moving it either way fails silently.
+import './instrument';
+import { fallbackLogger } from '@snapshot-labs/snapshot-sentry';
 import cors from 'cors';
 import express from 'express';
 import graphql from './graphql';
@@ -8,7 +11,6 @@ import initMetrics from './helpers/metrics';
 const app = express();
 const PORT = process.env.PORT || 3004;
 
-initLogger();
 initMetrics(app);
 
 app.disable('x-powered-by');
