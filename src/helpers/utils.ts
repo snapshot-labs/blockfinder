@@ -1,6 +1,8 @@
 import snapshot from '@snapshot-labs/snapshot.js';
 import networks from '@snapshot-labs/snapshot.js/src/networks.json';
 
+const broviderUrl = process.env.BROVIDER_URL || 'https://rpc.snapshot.org';
+
 export type Block = {
   number: number;
   timestamp: number;
@@ -22,7 +24,10 @@ export async function getBlockNumber(
   network: string,
   blockNum: number | 'latest'
 ): Promise<Block> {
-  const provider = snapshot.utils.getProvider(network);
+  const provider = snapshot.utils.getProvider(network, {
+    broviderUrl,
+    clientName: 'blockfinder'
+  });
   const result = await provider.getBlock(blockNum);
 
   return interpretResult(network, result);
