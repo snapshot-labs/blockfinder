@@ -38,7 +38,7 @@ function interpretResult(network: string, result: BlockResponse | null): Block {
     throw new Error(`Invalid block response for network ${network}`);
   }
 
-  if (networks[network].starknet) {
+  if (networks[network]?.starknet) {
     const starknetResult = result as StarknetBlockResponse;
     return {
       number: starknetResult.block_number,
