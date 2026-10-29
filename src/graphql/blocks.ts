@@ -3,9 +3,6 @@ import availableNetworks from '@snapshot-labs/snapshot.js/src/networks.json';
 import { GraphQLError } from 'graphql';
 import { getBlock, getRange } from '../helpers/cache';
 
-// Each network costs Brovider calls, so bound the fan-out of a single query
-const MAX_NETWORKS = 100;
-
 // Chain IDs missing from networks.json are reached through Brovider, which
 // answers 404 for the ones it has no node for
 function isValidNetwork(network: string): boolean {
@@ -74,13 +71,6 @@ export default async function query(_parent, args) {
   let networks: any = where?.network_in || where?.network || '1';
   const ts: any = where?.ts || 0;
   if (!Array.isArray(networks)) networks = [networks];
-  networks = [...new Set(networks)];
-
-  if (networks.length > MAX_NETWORKS) {
-    throw new GraphQLError(`too many networks, max ${MAX_NETWORKS}`, {
-      extensions: { code: 'TOO_MANY_NETWORKS' }
-    });
-  }
 
   if (!networks.every(isValidNetwork)) {
     throw new GraphQLError('invalid network', {

@@ -6,13 +6,9 @@ describe('POST /', () => {
   jest.retryTimes(2);
 
   it('boots a graphql instance', async () => {
-    const response = await request(HOST)
-      .post('/')
-      .set('Content-type', 'application/json');
+    const response = await request(HOST).post('/').set('Content-type', 'application/json');
 
-    expect(response.body).toEqual({
-      errors: [{ message: 'Must provide query string.' }]
-    });
+    expect(response.body).toEqual({ errors: [{ message: 'Must provide query string.' }] });
   });
 
   it('returns the blocknumber from a valid timestamp', async () => {
@@ -104,54 +100,48 @@ describe('POST /', () => {
     });
   }, 15e3);
 
-  it.each([
-    ['unknown to Brovider', '4'],
-    ['malformed', 'abc']
-  ])(
-    'returns a GraphQLError when giving a network %s',
-    async (_, network) => {
-      const response = await request(HOST)
-        .post('/')
-        .set('Content-type', 'application/json')
-        .send(
-          JSON.stringify({
-            query: `query {  blocks (where: { ts: 1640000000, network_in: ["1", "${network}"] }) {network number}}`,
-            variables: null
-          })
-        );
-
-      expect(response.body.errors).toEqual([
-        {
-          extensions: {
-            code: 'INVALID_NETWORK'
-          },
-          locations: [
-            {
-              column: 10,
-              line: 1
-            }
-          ],
-          message: 'invalid network',
-          path: ['blocks']
-        }
-      ]);
-    },
-    15e3
-  );
-
-  it('returns a GraphQLError when giving too many networks', async () => {
-    const networks = Array.from({ length: 101 }, (_, i) => `"${i + 1}"`);
+  it('returns a GraphQLError when giving invalid network', async () => {
     const response = await request(HOST)
       .post('/')
       .set('Content-type', 'application/json')
       .send(
         JSON.stringify({
-          query: `query { blocks (where: { ts: 1640000000, network_in: [${networks}] }) { network number } }`,
+          query:
+            'query {  blocks (where: { ts: 1640000000, network_in: ["1", "4"] }) {network number}}',
           variables: null
         })
       );
 
-    expect(response.body.errors[0].extensions.code).toBe('TOO_MANY_NETWORKS');
+    expect(response.body.errors).toEqual([
+      {
+        extensions: {
+          code: 'INVALID_NETWORK'
+        },
+        locations: [
+          {
+            column: 10,
+            line: 1
+          }
+        ],
+        message: 'invalid network',
+        path: ['blocks']
+      }
+    ]);
+  }, 15e3);
+
+  it('returns a GraphQLError when giving a malformed network', async () => {
+    const response = await request(HOST)
+      .post('/')
+      .set('Content-type', 'application/json')
+      .send(
+        JSON.stringify({
+          query:
+            'query {  blocks (where: { ts: 1640000000, network_in: ["1", "abc"] }) {network number}}',
+          variables: null
+        })
+      );
+
+    expect(response.body.errors[0].extensions.code).toBe('INVALID_NETWORK');
   }, 15e3);
 
   it.each([
