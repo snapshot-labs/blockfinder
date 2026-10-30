@@ -3,7 +3,14 @@ import availableNetworks from '@snapshot-labs/snapshot.js/src/networks.json';
 import { GraphQLError } from 'graphql';
 import { getBlock, getRange } from '../helpers/cache';
 
-const validNetworkIds = Object.keys(availableNetworks);
+// Chain IDs missing from networks.json are reached through Brovider, which
+// answers 404 for the ones it has no node for
+function isValidNetwork(network: string): boolean {
+  return (
+    Object.prototype.hasOwnProperty.call(availableNetworks, network) ||
+    /^[1-9]\d{0,14}$/.test(network)
+  );
+}
 
 async function tsToBlockNum(network: string, ts: number) {
   let [from, to]: any = await getRange(network, ts);
@@ -65,7 +72,7 @@ export default async function query(_parent, args) {
   const ts: any = where?.ts || 0;
   if (!Array.isArray(networks)) networks = [networks];
 
-  if (networks.some((network: string) => !validNetworkIds.includes(network))) {
+  if (!networks.every(isValidNetwork)) {
     throw new GraphQLError('invalid network', {
       extensions: { code: 'INVALID_NETWORK' }
     });

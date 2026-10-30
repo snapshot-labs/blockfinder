@@ -2,11 +2,6 @@ import { capture } from '@snapshot-labs/snapshot-sentry';
 import networks from '@snapshot-labs/snapshot.js/src/networks.json';
 import { Block, getBlockNumber } from './utils';
 
-const starts: Record<string, number> = {};
-Object.keys(networks).forEach(network => {
-  starts[network] = networks[network].start || 1;
-});
-
 const blocks: Record<string, Record<string, number>> = {};
 
 export async function getBlock(
@@ -51,7 +46,7 @@ export async function getRange(
   if (from && to) return [from, to];
 
   return await Promise.all([
-    getBlockNumber(network, starts[network]),
+    getBlockNumber(network, networks[network]?.start || 1),
     getBlockNumber(network, 'latest')
   ]);
 }

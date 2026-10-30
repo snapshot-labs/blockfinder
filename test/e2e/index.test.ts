@@ -129,6 +129,21 @@ describe('POST /', () => {
     ]);
   }, 15e3);
 
+  it('returns a GraphQLError when giving a malformed network', async () => {
+    const response = await request(HOST)
+      .post('/')
+      .set('Content-type', 'application/json')
+      .send(
+        JSON.stringify({
+          query:
+            'query {  blocks (where: { ts: 1640000000, network_in: ["1", "abc"] }) {network number}}',
+          variables: null
+        })
+      );
+
+    expect(response.body.errors[0].extensions.code).toBe('INVALID_NETWORK');
+  }, 15e3);
+
   it.each([
     ['in the future', Math.floor((Date.now() + 1000 * 60) / 1000)],
     ['negative', -500]
